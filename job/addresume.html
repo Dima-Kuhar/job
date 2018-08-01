@@ -1,0 +1,611 @@
+<?
+$firtLevelMenuId=100;
+$menuId=102;
+
+include_once('0-includes.inc');
+
+$title='Добавить резюме';
+$pagename='addresume';
+
+//====================================================
+// если пользователь залогинен, то отсылаем его на страницу addresume2.html
+if($user_login && $_SESSION['user_type'] == 'seeker')
+{
+	Header("Location: addresume2.html?".session_name()."=".session_id());
+	exit;
+}
+//====================================================
+// если действие не определено, то нет действия
+if(!isset($action)) $action='';
+// пока никаких отчетов о действиях не было
+$action_inform='';
+//====================================================
+
+db_connect();
+
+// действия
+switch($action)
+{
+	// форма для добавления
+	case 'show_form':
+		include('0-header.inc');   // выводим верхнюю шапку
+		show_form();               // выводим форму добавления файла
+		include('0-footer.inc');   // выводим нижнюю шапку
+	break;
+
+	// добавляем
+	case 'do_add':
+		// принимаем данные
+		// шаг 1: Данные об интересующей вакансии
+		$form_vars['speciality_id'] = trim(strip_tags($HTTP_POST_VARS['speciality_id']));
+		$form_vars['speciality']    = trim(strip_tags($HTTP_POST_VARS['speciality']));
+		$form_vars['schedule_id']   = trim(strip_tags($HTTP_POST_VARS['schedule_id']));
+		$form_vars['pay']           = trim(strip_tags($HTTP_POST_VARS['pay']));
+		$form_vars['education']     = trim(htmlspecialchars($HTTP_POST_VARS['education']));
+		$form_vars['experience']    = trim(htmlspecialchars($HTTP_POST_VARS['experience']));
+		$form_vars['skill']         = trim(htmlspecialchars($HTTP_POST_VARS['skill']));
+		// шаг 2: Ваши данные
+		$form_vars['name']          = trim(strip_tags($HTTP_POST_VARS['name']));
+		$form_vars['sex']           = trim(strip_tags($HTTP_POST_VARS['sex']));
+		$form_vars['age']           = trim(strip_tags($HTTP_POST_VARS['age']));
+		$form_vars['city_id']       = trim(strip_tags($HTTP_POST_VARS['city_id']));
+		$form_vars['city']          = trim(strip_tags($HTTP_POST_VARS['city']));
+		$form_vars['phone']         = trim(strip_tags($HTTP_POST_VARS['phone']));
+		$form_vars['email']         = trim(strip_tags($HTTP_POST_VARS['email']));
+		// шаг 3: Данные для управления Вашими резюме
+		$auth_vars['login']         = trim(strip_tags($HTTP_POST_VARS['login']));
+		$auth_vars['pass']          = trim(strip_tags($HTTP_POST_VARS['pass']));
+		$auth_vars['pass2']         = trim(strip_tags($HTTP_POST_VARS['pass2']));
+
+		// проверяем данные
+		$errors_arr = array();
+		$values_arr = array();
+		$check_form = check_vars($form_vars);
+		$check_auth = check_auth($auth_vars);
+
+		// данные верны, добавляем
+		if($check_form=='' && ($check_auth=='' || $check_auth=='w/o auth'))
+		{
+			// отчет об ошибках во время добавления вакансии, направляемый администратору
+			$error_log = array();
+			// добавляем инфу во вспомогательные таблицы
+			if($form_vars['speciality'] != '')
+			{
+				$add_speciality = add_simplerows($db_specialitys, 'id', 'speciality', $form_vars['speciality']);
+				if($add_speciality) $form_vars['speciality_id'] = $add_speciality;
+				else $error_log[] = 'Не удалось добавить новую специальность в таблицу';
+			}
+			if($form_vars['city'] != '')
+			{
+				$add_city = add_simplerows($db_citys, 'id', 'city', $form_vars['city']);
+				if($add_city) $form_vars['city_id'] = $add_city;
+				else $error_log[] = 'Не удалось добавить новый город в таблицу';
+			}
+			// добавляем пользователя
+			if($check_auth=='w/o auth')
+			{
+				$auth_vars['login'] = 'unregistered';
+				$auth_vars['pass']  = 'unregistered';
+			}
+			$add_user = add_user($auth_vars['login'], $auth_vars['pass'], $form_vars['name'], $form_vars['sex'], $form_vars['age'], $form_vars['city_id'], $form_vars['phone'], $form_vars['email']);
+			if($add_user) $user_id = $add_user;
+			else $error_log[] = 'Не удалось добавить пользователя в таблицу соискателей';
+			// добавляем объявление
+			$date = date("YmdHis");
+			$ip   = $REMOTE_ADDR;
+			$add_resume = add_resume($user_id, $form_vars['speciality_id'], $form_vars['schedule_id'], $form_vars['pay'], $form_vars['education'], $form_vars['experience'], $form_vars['skill'], $date, $ip);
+			if($add_resume) $resume_id = $add_resume;
+			else $error_log[] = 'Не удалось добавить резюме в таблицу';
+			// выводим пользователю отчет
+			if(count($error_log) == 0)
+			{
+				$action_inform='Ваше резюме добавлено в базу данных Job.RusCable.Ru';
+				$msg = create_letter($form_vars, date("Y/m/d H:i"), 'newresume');
+				letter_2_manager($msg, 'Новое резюме');
+				// отаправляем юзеру письмо о регистрации
+				if($form_vars['email']!='' && $auth_vars['login']!='')
+				{
+					$msg2 = create_user_letter($form_vars, $auth_vars, 'seeker');
+					letter_2_user($form_vars['email'], $msg2, 'Ваши регистрационные данные');
+				}
+				include('0-header.inc');
+				echo '<h1>ДОБАВЛЕНИЕ РЕЗЮМЕ</h1>'."\n";
+				show_action_inform();
+				echo '<p>Постоянный адрес Вашего резюме:<br>'."\n";
+				echo '<a href="showresume-'.$resume_id.'.html">http://job.ruscable.ru/showresume-'.$resume_id.'.html</a>'."\n";
+				if($auth_vars['login']!='')
+				{
+					echo '<p>Для дальнейшего управления Вашими резюме на нашем сайте<br>используйте данные указанные Вами при размещении резюме:'."\n";
+					echo '<p><b>Логин:</b> '.$auth_vars['login']."\n";
+					echo '<br><b>Пароль:</b> '.$auth_vars['pass']."\n";
+				}
+				echo '<p><b>Благодарим за использование нашего сервиса</b>'."\n";
+				include('0-footer.inc');
+			}
+			else
+			{
+				$action_inform='Извините, в данный момент добавление Вашего резюме невозможно. Сервис будет доступен в течении часа.';
+				$to_admin = implode("\n", $error_log);
+				letter_2_webmaster($to_admin);
+				include('0-header.inc');
+				echo '<h1>Добавление резюме</h1>'."\n";
+				show_action_inform();
+				echo '<p>Можем предложить Вам просмотреть <a href="showallvacancie.html">вакансии организаций</a>, размещенные на нашем сайте.'."\n";
+				echo '<p><b>Благодарим за использование нашего сервиса</b>'."\n";
+				include('0-footer.inc');
+			}
+		}
+		else
+		{
+			$action_inform='Неправильно введены данные';
+			if($check_form=='')
+				$check_form=array();
+			if($check_auth=='' || $check_auth=='w/o auth')
+				$check_auth=array();
+			$errors = array_merge($check_form, $check_auth);
+			$values = array_merge($form_vars, $auth_vars);
+			include('0-header.inc');
+			show_form($values, $errors);
+			include('0-footer.inc');
+		}
+
+	break;
+
+	// выводим форму для добавления
+	default:
+		include('0-header.inc');
+		show_form();
+		include('0-footer.inc');
+	break;
+}
+
+
+
+//====================================================
+// ФУНКЦИИ
+//====================================================
+// выводим отчет о действиях
+function show_action_inform()
+{
+	global $action_inform;
+
+	if($action_inform!='') echo '<p><font color="#ff0000"><b>Результат:</b> '.$action_inform.'</font>';
+}
+// выводим форму добавления
+function show_form($values='', $errors='')
+{
+	global $db_users_seeker, $db_users_employer, $db_resume, $db_vacancie, $db_citys, $db_specialitys, $db_schedules;
+	global $forms_size, $textarea_cols, $textarea_rows;
+
+	?>
+	<h1>Добавить резюме</h1>
+
+	<form name="addresume_form" method="post" enctype="multipart/form-data" action="<?=$GLOBALS['SCRIPT_NAME'];?>" class=tform>
+
+	<table border="0" width="100%" height="25" cellpadding="4" cellspacing="0" background="/images/bg-top02-0.gif">
+	<tr>
+		<td valign="top" width="120" background="/images/bg-top02-0.gif"><div class="text2"><b>Шаг&nbsp;1:</b></div></td>
+		<td valign="top" width="2" background="/images/bg-top02-0.gif"><img src="/images/empty.gif" width="2" height="1" border="0" alt=""></td>
+		<td valign="top"><div class="text3"><b>&nbsp;Данные об интересующей вакансии</b></div></td>
+	</tr>
+	</table>
+
+
+	<ul>
+
+
+
+
+		Специальность<sup><font color="#ff0000">*</font></sup>:<br>
+		<?
+		// сообщение об ошибке
+		if($errors!='' && isset($errors['speciality']))
+			echo '<font color="#ff0000"><b>Ошибка:</b> '.$errors['speciality'].'</font><br>';
+		?>
+		<div class="note">(выберите нужную Вам специальность из списка)</div>
+		<select class="ff" name="speciality_id">
+		<?
+		$rows = GetDB("SELECT * FROM ".$db_specialitys."  where visible=1  ORDER BY speciality");
+		//echo "SELECT * FROM ".$db_specialitys." ORDER BY speciality";
+
+		// была ошибка, выставляем то, что было выбрано ранее
+		if($values!='' && isset($values['speciality_id']))
+			$cheked = $values['speciality_id'];
+		else
+			$cheked = '';
+
+		if($cheked == '' || $cheked == 0)
+			echo "\t\t\t".'<option value="0" selected>---'."\n";
+
+		for($i=0; $i<count($rows); $i++)
+		{
+			if($rows[$i]['id'] != $cheked)
+				echo "\t\t\t".'<option value="'.$rows[$i]['id'].'">'.ucfirst($rows[$i]['speciality'])."\n";
+			else
+				echo "\t\t\t".'<option value="'.$rows[$i]['id'].'" selected>'.ucfirst($rows[$i]['speciality'])."\n";
+		}
+		?>
+		</select>
+		<div class="note">(если ничего подходящего не нашли, введите свою, <b>не более 150 символов</b>)</div>
+		<input type="text" name="speciality" class="ff" size="<?=$forms_size;?>" maxlength="150" value="<?if($values!='' && isset($values['speciality'])) echo $values['speciality'];?>"><br>
+
+
+
+
+		График работы<sup><font color="#ff0000">*</font></sup>:<br>
+		<?
+		// сообщение об ошибке
+		if($errors!='' && isset($errors['schedule_id']))
+			echo '<font color="#ff0000"><b>Ошибка:</b> '.$errors['schedule_id'].'</font><br>';
+		?>
+		<div class="note">(выберите подходящий Вам график из списка)</div>
+		<select class="ff" name="schedule_id">
+		<?
+		$rows = GetDB("SELECT * FROM ".$db_schedules);
+
+		// была ошибка, выставляем то, что было выбрано ранее
+		if($values!='' && isset($values['schedule_id']))
+			$cheked = $values['schedule_id'];
+		else
+			$cheked = '';
+
+		if($cheked == '' || $cheked == 0)
+			echo "\t\t\t".'<option value="0" selected>---'."\n";
+
+		for($i=0; $i<count($rows); $i++)
+		{
+			if($rows[$i]['id'] != $cheked)
+				echo "\t\t\t".'<option value="'.$rows[$i]['id'].'">'.$rows[$i]['schedule']."\n";
+			else
+				echo "\t\t\t".'<option value="'.$rows[$i]['id'].'" selected>'.$rows[$i]['schedule']."\n";
+		}
+		?>
+		</select>
+		<br>
+
+
+
+
+		Ожидаемая заработная плата в руб.<sup><font color="#ff0000">*</font></sup>:<br>
+		<?
+			if($errors!='' && isset($errors['pay'])) echo '<font color="#ff0000"><b>Ошибка:</b> '.$errors['pay'].'</font><br>';
+		?>
+		<div class="note">(должно быть введено целое число)</div>
+		<input type="text" name="pay" class="ff" size="<?=$forms_size;?>" maxlength="10" value="<?if($values!='' && isset($values['pay'])) echo $values['pay'];?>"><br>
+
+
+
+
+		Образование<sup><font color="#ff0000">*</font></sup>:<br>
+		<?
+			if($errors!='' && isset($errors['education'])) echo '<font color="#ff0000"><b>Ошибка:</b> '.$errors['education'].'</font><br>';
+		?>
+		<div class="note">(укажите ваше образование, курсы повышения квалификации и т.д., не более 500 символов)</div>
+		<textarea name="education" rows="<?=$textarea_rows;?>" cols="<?=$textarea_cols;?>" class="ff"><?if($values!='' && isset($values['education'])) echo $values['education'];?></textarea><br>
+
+
+
+
+		Опыт работы<sup><font color="#ff0000">*</font></sup>:<br>
+		<?
+			if($errors!='' && isset($errors['experience'])) echo '<font color="#ff0000"><b>Ошибка:</b> '.$errors['experience'].'</font><br>';
+		?>
+		<div class="note">(опыт работы по интересующей Вас специальности, либо смежной, не более 1000 символов)</div>
+		<textarea name="experience" rows="<?=$textarea_rows;?>" cols="<?=$textarea_cols;?>" class="ff"><?if($values!='' && isset($values['experience'])) echo $values['experience'];?></textarea><br>
+
+
+
+
+		Профессиональные навыки<sup><font color="#ff0000">*</font></sup>:<br>
+		<?
+			if($errors!='' && isset($errors['skill'])) echo '<font color="#ff0000"><b>Ошибка:</b> '.$errors['skill'].'</font><br>';
+		?>
+		<div class="note">(владеете ли Вы компьютером, имеете ли водительские права и т.д., не более 500 символов)</div>
+		<textarea name="skill" rows="<?=$textarea_rows;?>" cols="<?=$textarea_cols;?>" class="ff"><?if($values!='' && isset($values['skill'])) echo $values['skill'];?></textarea><br>
+
+
+
+
+		</ul>
+
+	<p>
+
+	<table border="0" width="100%" height="25" cellpadding="4" cellspacing="0" background="/images/bg-top02-0.gif">
+	<tr>
+		<td valign="top" width="120" background="/images/bg-top02-0.gif"><div class="text2"><b>Шаг&nbsp;2:</b></div></td>
+		<td valign="top" width="2" background="/images/bg-top02-0.gif"><img src="/images/empty.gif" width="2" height="1" border="0" alt=""></td>
+		<td valign="top"><div class="text3"><b>&nbsp;Ваши данные</b></div></td>
+	</tr>
+	</table>
+
+	<ul>
+
+
+
+
+		Ф.И.О.<sup><font color="#ff0000">*</font></sup>:<br>
+		<?
+			if($errors!='' && isset($errors['name'])) echo '<font color="#ff0000"><b>Ошибка:</b> '.$errors['name'].'</font><br>';
+		?>
+		<div class="note">(не более 100 символов)</div>
+		<input type="text" name="name" class="ff" size="<?=$forms_size;?>" maxlength="100" value="<?if($values!='' && isset($values['name'])) echo $values['name'];?>"><br>
+
+
+
+
+		Пол<sup><font color="#ff0000">*</font></sup>:<br>
+		<?
+			if($errors!='' && isset($errors['sex'])) echo '<font color="#ff0000"><b>Ошибка:</b> '.$errors['sex'].'</font><br>';
+		?>
+		<select class="ff" name="sex">
+		<?
+		$sex_0 = '';
+		$sex_m = '';
+		$sex_f = '';
+		// была ошибка, выставляем то, что было выбрано ранее
+		if($values!='' && isset($values['sex']))
+		{
+			$var='sex_'.$values['sex'];
+			$$var= 'selected';
+		}
+		else
+			$sex_0 = 'selected';
+
+			echo "\t\t\t".'<option value="0" '.$sex_0.'>---'."\n";
+			echo "\t\t\t".'<option value="m" '.$sex_m.'>мужской'."\n";
+			echo "\t\t\t".'<option value="f" '.$sex_f.'>женский'."\n";
+		?>
+		</select>
+		<br>
+
+
+
+		Возраст:<br>
+		<?
+			if($errors!='' && isset($errors['age'])) echo '<font color="#ff0000"><b>Ошибка:</b> '.$errors['age'].'</font><br>';
+		?>
+		<div class="note">(должно быть введено целое число)</div>
+		<input type="text" name="age" class="ff" size="<?=$forms_size;?>" maxlength="3" value="<?if($values!='' && isset($values['age'])) echo $values['age'];?>"><br>
+
+
+
+
+		Город<sup><font color="#ff0000">*</font></sup>:<br>
+		<?
+			if($errors!='' && isset($errors['city'])) echo '<font color="#ff0000"><b>Ошибка:</b> '.$errors['city'].'</font><br>';
+		?>
+		<div class="note">(выберите Ваш город из списка)</div>
+		<select class="ff" name="city_id">
+		<?
+		$rows = GetDB("SELECT * FROM ".$db_citys."  where id not in(82,524) ORDER BY city");
+
+		// была ошибка, выставляем то, что было выбрано ранее
+		if($values!='' && isset($values['city_id']))
+			$cheked = $values['city_id'];
+		else
+			$cheked = '';
+
+		if($cheked == '' || $cheked == 0)
+			echo "\t\t\t".'<option value="0" selected>---'."\n";
+
+		echo  "<option value=82 "; if($cheked==82){echo " selected";} echo ">Москва</option>";
+		echo  "<option value=524 "; if($cheked==524){echo " selected";} echo ">Санкт-Петербург</option>";
+		echo  "<option value=0><hr></option>";
+
+		for($i=0; $i<count($rows); $i++)
+		{
+			if($rows[$i]['id'] != $cheked)
+				echo "\t\t\t".'<option value="'.$rows[$i]['id'].'">'.$rows[$i]['city']."\n";
+			else
+				echo "\t\t\t".'<option value="'.$rows[$i]['id'].'" selected>'.$rows[$i]['city']."\n";
+		}
+		?>
+		</select>
+		<div class="note">(если Вашего города в списке нет, то введите его, но <b>не более 100 символов</b>)</div>
+		<input type="text" name="city" class="ff" size="<?=$forms_size;?>" maxlength="100" value="<?if($values!='' && isset($values['city'])) echo $values['city'];?>"><br>
+
+
+
+
+		<li>Телефон:<br>
+		<?
+			if($errors!='' && isset($errors['phone'])) echo '<font color="#ff0000"><b>Ошибка:</b> '.$errors['phone'].'</font><br>';
+		?>
+		<div class="note">(не более 100 символов)</div>
+		<input type="text" name="phone" class="ff" size="<?=$forms_size;?>" maxlength="100" value="<?if($values!='' && isset($values['phone'])) echo $values['phone'];?>"><br>
+
+
+
+
+		<li>E-mail:<br>
+		<?
+			if($errors!='' && isset($errors['email'])) echo '<font color="#ff0000"><b>Ошибка:</b> '.$errors['email'].'</font><br>';
+		?>
+		<div class="note">(не более 150 символов)</div>
+		<input type="text" name="email" class="ff" size="<?=$forms_size;?>" maxlength="150" value="<?if($values!='' && isset($values['email'])) echo $values['email'];?>"><br>
+
+
+	</ul>
+
+	<p>
+
+	<table border="0" width="100%" height="25" cellpadding="4" cellspacing="0" background="/images/bg-top02-0.gif">
+	<tr>
+		<td valign="top" width="120" background="/images/bg-top02-0.gif"><div class="text2"><b>Шаг&nbsp;3:</b></div></td>
+		<td valign="top" width="2" background="/images/bg-top02-0.gif"><img src="/images/empty.gif" width="2" height="1" border="0" alt=""></td>
+		<td valign="top"><div class="text3"><b>&nbsp;Данные для управления Вашими резюме</b></div></td>
+	</tr>
+	</table>
+
+	<p>Если Вы желаете впоследствии управлять Ваши резюме, то необходимо выбрать для себя логин и пароль.
+
+	<ul>
+
+
+
+		<li>Логин:<br>
+		<?
+			if($errors!='' && isset($errors['login'])) echo '<font color="#ff0000"><b>Ошибка:</b> '.$errors['login'].'</font><br>';
+		?>
+		<div class="note">(не более 25 символов, разрешается использовать только символы латинского алфавита и цифры,<br>регистр букв имеет значение)</div>
+		<input type="text" name="login" class="ff" size="<?=$forms_size;?>" maxlength="25" value="<?if($values!='' && isset($values['login'])) echo $values['login'];?>"><br>
+
+
+
+
+		<li>Пароль:<br>
+		<?
+			if($errors!='' && isset($errors['pass'])) echo '<font color="#ff0000"><b>Ошибка:</b> '.$errors['pass'].'</font><br>';
+		?>
+		<div class="note">(не более 25 символов, разрешается использовать только символы латинского алфавита и цифры,<br>регистр букв имеет значение)</div>
+		<input type="password" name="pass" class="ff" size="<?=$forms_size;?>" maxlength="25" value=""><br>
+
+		<li>Повторите пароль:<br>
+		<input type="password" name="pass2" class="ff" size="<?=$forms_size;?>" maxlength="25" value=""><br>
+
+
+
+	</ul>
+	<p>
+	<p><b>Важно:</b> поля отмеченные знаком &laquo;<font color="#ff0000">*</font>&raquo; обязательны для заполнения.
+	<p><input type="hidden" name="action" value="do_add">
+	<input type="submit" name="submit" value="Добавить резюме" class="ff">
+
+	</form>
+
+	<?
+	echo ''."\n";
+	echo ''."\n";
+}
+// проверяем полученные данные
+function check_vars($form_vars)
+{
+	$error='';
+
+	if($form_vars['speciality']!='' && strlen($form_vars['speciality'])>150)
+		$error['speciality']='Поле должно содержать на <b>'.(strlen($form_vars['speciality'])-150).'</b> символов меньше';
+	elseif($form_vars['speciality']=='' && $form_vars['speciality_id']==0)
+		$error['speciality']='Данное поле обязательно для заполнения';
+	elseif($form_vars['speciality']=='' && !check_tblrow($GLOBALS['db_specialitys'], 'id', $form_vars['speciality_id']))
+		$error['speciality']='Переданы недопустимые данные';
+
+	if(!check_tblrow($GLOBALS['db_schedules'], 'id', $form_vars['schedule_id']))
+		$error['schedule_id']='Переданы недопустимые данные';
+
+	if($form_vars['pay']=='')
+		$error['pay']='Данное поле обязательно для заполнения';
+	elseif(!check_integer($form_vars['pay'], true) || $form_vars['pay']>9999999999)
+		$error['pay']='Введена некорректная величина заработной платы';
+
+	if($form_vars['education']=='')
+		$error['education']='Данное поле обязательно для заполнения';
+	elseif(strlen($form_vars['education'])>500)
+		$error['education']='Поле должно содержать на <b>'.(strlen($form_vars['education'])-500).'</b> символов меньше';
+
+	if($form_vars['experience']=='')
+		$error['experience']='Данное поле обязательно для заполнения';
+	elseif(strlen($form_vars['experience'])>1000)
+		$error['experience']='Поле должно содержать на <b>'.(strlen($form_vars['experience'])-1000).'</b> символов меньше';
+
+	if($form_vars['skill']=='')
+		$error['skill']='Данное поле обязательно для заполнения';
+	elseif(strlen($form_vars['skill'])>500)
+		$error['skill']='Поле должно содержать на <b>'.(strlen($form_vars['skill'])-500).'</b> символов меньше';
+
+	if($form_vars['name']=='')
+		$error['name']='Данное поле обязательно для заполнения';
+	elseif(strlen($form_vars['name'])>100)
+		$error['name']='Поле должно содержать на <b>'.(strlen($form_vars['name'])-100).'</b> символов меньше';
+
+	if($form_vars['sex']!='m' && $form_vars['sex']!='f')
+		$error['sex']='Вы не указали свой пол';
+
+	//if($form_vars['age']=='')
+	//	$error['age']='Данное поле обязательно для заполнения';
+	//else
+	if(!check_integer($form_vars['age'], true) || $form_vars['age']>100)
+		$error['age']='Указан некорректный возраст';
+
+	if($form_vars['city']!='' && strlen($form_vars['city'])>100)
+		$error['city']='Поле должно содержать на <b>'.(strlen($form_vars['city'])-100).'</b> символов меньше';
+	elseif($form_vars['city']=='' && $form_vars['city_id']==0)
+		$error['city']='Данное поле обязательно для заполнения';
+	elseif($form_vars['city']=='' && !check_tblrow($GLOBALS['db_citys'], 'id', $form_vars['city_id']))
+		$error['city']='Переданы недопустимые данные';
+
+	if(strlen($form_vars['phone'])>100)
+		$error['phone']='Поле должно содержать на <b>'.(strlen($form_vars['phone'])-100).'</b> символов меньше';
+
+	if($form_vars['email']!='' && preg_match("/^[a-zA-Z0-9\\._-]+@(?:[a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]{2,3}\$/", $form_vars['email'])==0)
+		$error['email']='E-mail введен некорректно';
+
+	return $error;
+}
+// проверяем логин и пароль
+// если не введены ни логин, ни пароль, то возвращаем 'w/o auth'
+function check_auth($auth_vars)
+{
+	$error='';
+
+	if($auth_vars['login']=='' && $auth_vars['pass']=='' && $auth_vars['pass2']=='')
+		return 'w/o auth';
+
+	if($auth_vars['login']=='')
+		$error['login']='Данное поле обязательно для заполнения';
+	elseif(strlen($auth_vars['login'])>25)
+		$error['login']='Поле должно содержать на <b>'.(strlen($auth_vars['login'])-25).'</b> символов меньше';
+	elseif(!preg_match("/^[qwertyuiopasdfghjklzxcvbnm1234567890]*$/i", $auth_vars['login']))
+		$error['login']='Поле должно содержать только символы латинского алфавита и цифры';
+	elseif(check_tblrow($GLOBALS['db_users_seeker'], 'login', $auth_vars['login']))
+		$error['login']='Извините, но логин "'.$auth_vars['login'].'" уже зарегистрирован в системе';
+
+	if($auth_vars['pass']=='' && $auth_vars['pass2']=='')
+		$error['pass']='Данное поле обязательно для заполнения';
+	elseif($auth_vars['pass']!=$auth_vars['pass2'])
+		$error['pass']='Введенные пароли не совпадают';
+	elseif(strlen($auth_vars['pass'])>25)
+		$error['pass']='Поле должно содержать на <b>'.(strlen($auth_vars['pass'])-25).'</b> символов меньше';
+	elseif(!preg_match("/^[qwertyuiopasdfghjklzxcvbnm1234567890]*$/i", $auth_vars['pass']))
+		$error['pass']='Поле должно содержать только символы латинского алфавита и цифры';
+
+	return $error;
+}
+// добавляем юзера
+function add_user($login, $pass, $name, $sex, $age, $city_id, $phone, $email)
+{
+	global $db_users_seeker;
+
+	$add = mysql_query("INSERT INTO `$db_users_seeker` VALUES (NULL, '$login', '$pass', '$name', '$sex', '$age', '$city_id', '$phone', '$email')");
+	if(!$add) return false;
+	$res = GetDB("SELECT id FROM `$db_users_seeker` WHERE login='$login' and pass='$pass' and name='$name' and sex='$sex' and age='$age' and city_id='$city_id' and phone='$phone' and email='$email'");
+	if(count($res)>0)
+	{
+		$id = $res[0]['id'];
+		return $id;
+	}
+	else
+	{
+		return false;
+	}
+}
+// добавляем объявление
+function add_resume($user_id, $speciality_id, $schedule_id, $pay, $education, $experience, $skill, $date, $ip)
+{
+	global $db_resume;
+
+	//echo "INSERT INTO `$db_resume` VALUES (NULL, '$user_id', '$speciality_id', '$schedule_id', '$pay', '$education', '$experience', '$skill', '$date', '$ip')";
+	$add = mysql_query("INSERT INTO `$db_resume` VALUES (NULL, '$user_id', '$speciality_id', '$schedule_id', '$pay', '1', '$education', '$experience', '$skill', '$date', '$ip')");
+	if(!$add) return false;
+	$res = GetDB("SELECT id FROM `$db_resume` WHERE seeker_id='$user_id' and speciality_id='$speciality_id' and schedule_id='$schedule_id' and pay='$pay' and education='$education' and experience='$experience' and skill='$skill' and date='$date' and ip='$ip'");
+	if(count($res)>0)
+	{
+		$id = $res[0]['id'];
+		return $id;
+	}
+	else
+	{
+		return false;
+	}
+}
+//====================================================
+?>

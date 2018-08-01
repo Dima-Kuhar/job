@@ -1,0 +1,6 @@
+# folder ignore
+
+job/images/
+
+job/*.jpg
+job/*.gif

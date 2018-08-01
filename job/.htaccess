@@ -1,0 +1,36 @@
+<Files authlog.txt>
+ order allow,deny
+ deny from all
+</Files>
+<IfModule mod_charset.c>
+CharsetDisable On
+</IfModule>
+CharsetSourceEnc windows-1251
+CharsetDefault windows-1251
+
+AddHandler application/x-httpd-php .htm .html .inc
+
+php_flag magic_quotes_gpc Off
+php_flag magic_quotes_runtime Off
+
+ErrorDocument 404 /error.html
+
+RewriteEngine On
+
+#RewriteRule showallresume-(.*).html showallresume.html?page=$1
+#RewriteRule showresume-(.*).html showresume.html?id=$1
+#RewriteRule showallvacancie-(.*).html showallvacancie.html?page=$1
+#RewriteRule showvacancie-(.*).html showvacancie.html?id=$1
+
+RewriteRule showallresume-([^\.]+)\.html showallresume.html?page=$1&%{QUERY_STRING}
+RewriteRule showresume-([^\.]+)\.html showresume.html?id=$1&%{QUERY_STRING}
+RewriteRule showallvacancie-([^\.]+)\.html showallvacancie.html?page=$1&%{QUERY_STRING}
+RewriteRule showvacancie-([^\.]+)\.html showvacancie.html?id=$1&%{QUERY_STRING}
+
+RewriteRule data-allresume-([^\.]+)\.html data-allresume.html?page=$1&%{QUERY_STRING}
+RewriteRule data-resume-([^\.]+)\.html data-resume.html?id=$1&%{QUERY_STRING}
+RewriteRule data-allvacancie-([^\.]+)\.html data-allvacancie.html?page=$1&%{QUERY_STRING}
+RewriteRule data-vacancie-([^\.]+)\.html data-vacancie.html?id=$1&%{QUERY_STRING}
+
+php_value auto_prepend_file /home/ruscableru/ruscableru/job/prepend.php
+php_value session.cookie_domain ".ruscable.ru"

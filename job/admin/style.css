@@ -1,0 +1,30 @@
+A:link, A:visited, A:active {color: 000000; text-decoration: underline;}
+A:hover			{color: ff0000; text-decoration: none;}
+
+A.menu:link, A.menu:visited, A.menu:active {color: 494949; text-decoration: underline;}
+A.menu:hover	{color: ff0000; text-decoration: none;}
+
+A.made:link, A.made:visited, A.made:active {color: 7E89B1; text-decoration: none;}
+A.made:hover	{color: 494949; text-decoration: underline;}
+
+body			{color:000000; font-family: Arial,sans-serif; font-size: 12px;}
+
+p,li,dt,dd,pre	{font-family: Arial,sans-serif; font-size: 12px; color: 000000;}
+li				{list-style-image: url(/admin/images/bullet.gif);}
+
+h1				{font-family: Arial,sans-serif; font-size: 14px; color: 000000; font-weight: 900;}
+
+.fnt1			{font-family: Arial,sans-serif; font-size: 18px; color: 494949; font-weight: 900;}
+.fnt2			{font-family: Arial,sans-serif; font-size: 12px; color: 000000;}
+.fnt2made		{font-family: Arial,sans-serif; font-size: 12px; color: 7E89B1;}
+.fnt3			{font-family: Arial,sans-serif; font-size: 10px; color: 000000;}
+.fnt3note		{font-family: Arial,sans-serif; font-size: 10px; color: 7E89B1;}
+
+.ff				{font-family: Arial,sans-serif; border: 7E89B1 1px solid; border-color: 7E89B1; background-color: ffffff;}
+
+.color1			{background-color: 7E89B1;}
+.color2			{background-color: E5EBFF;}
+.color3			{background-color: 272727;}
+.color4			{background-color: ffffff;}
+.color5			{background-color: 000000;}
+

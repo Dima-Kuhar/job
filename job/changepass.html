@@ -1,0 +1,294 @@
+<?
+$firtLevelMenuId=300;
+$menuId=304;
+include_once('0-includes.inc');
+
+
+
+$title='Изменение пароль';
+
+$pagename='changepass';
+
+session_name('JOBSESID');
+@session_start();
+if(isset($_SESSION['user'])) $user_login = true;
+
+//====================================================
+
+// если пользователь не залогинен, то отсылаем его на страницу index.html
+
+if(!$user_login)
+
+{
+
+	Header("Location: index.html");
+
+	exit;
+
+}
+
+//====================================================
+
+// если действие не определено, то нет действия
+
+if(!isset($action)) $action='';
+
+// пока никаких отчетов о действиях не было
+
+$action_inform='';
+
+//====================================================
+
+
+
+db_connect();
+
+
+
+// действия
+
+include('0-header.inc');
+
+echo '<h1>Изменение пароля</h1>';
+
+switch($action)
+
+{
+
+	// выводим форму
+
+	case 'show_form':
+
+		show_form();
+
+	break;
+
+
+
+	// восстанавливаем
+
+	case 'change':
+
+		// принимаем данные
+
+		$form_vars['newpass']  = trim(strip_tags($HTTP_POST_VARS['newpass']));
+
+		$form_vars['newpass2'] = trim(strip_tags($HTTP_POST_VARS['newpass2']));
+
+		// проверяем данные
+
+		$check_form = check_vars($form_vars);
+
+		// есть такая маза
+
+		if($check_form == '')
+
+		{
+
+			$change = change_pass($form_vars['newpass'], $_SESSION['user'], $_SESSION['user_type']);
+
+			if($change)
+
+			{
+
+				// отаправляем юзеру письмо с новым паролем
+
+				$table = 'db_users_'.$_SESSION['user_type'];
+
+				$email = get_tblrow($$table, 'email', 'login', $_SESSION['user']);
+
+				if($email!='')
+
+				{
+
+					$msg  = "Ваш пароль для входа на сайт $cfg_site_name\n";
+
+					$msg .= "изменен через панель управления.\n\n";
+
+					$msg .= "Новый пароль: ".$form_vars['newpass']."\n\n";
+
+					$msg .= "------------------------------\n";
+
+					$msg .= "Администрация $cfg_site_name\n";
+
+					$msg .= "mailto:$cfg_from_email\n";
+
+					letter_2_user($email, $msg, 'Изменение пароля');
+
+				}
+
+				echo '<p><font color="#ff0000"><b>Результат:</b> Ваш пароль успешно изменен</font>';
+
+				echo '<p>Для следующего входа на наш сайт используйте новый пароль:'."\n";
+
+				echo '<p><b>Логин:</b> '.$_SESSION['user']."\n";
+
+				echo '<br><b>Пароль:</b> '.$form_vars['newpass']."\n";
+
+			}
+
+			else
+
+			{
+
+				echo '<p><font color="#ff0000">Извините, в данный момент изменение Вашего пароля невозможно. Сервис будет доступен в течении часа.</font>';
+
+			}
+
+		}
+
+		// не прокатило
+
+		else
+
+		{
+
+			echo '<p><font color="#ff0000"><b>Ошибка:</b> '.$check_form['newpass'].'</font>';
+
+			show_form();
+
+		}
+
+	break;
+
+
+
+	// выводим форму
+
+	default:
+
+		show_form();
+
+	break;
+
+}
+
+include('0-footer.inc');
+
+
+
+//====================================================
+
+// ФУНКЦИИ
+
+//====================================================
+
+// выводим форму
+
+function show_form()
+
+{
+
+	global $forms_size;
+
+
+
+	?>
+
+	<form name="form" method="post" enctype="multipart/form-data" action="<?=$GLOBALS['SCRIPT_NAME'];?>" class=tform>
+
+
+
+	<table border="0" width="100%" height="25" cellpadding="4" cellspacing="0" background="/images/bg-top02-0.gif">
+
+	<tr>
+
+		<td valign="top" width="120" background="/images/bg-top02-0.gif"><div class="text2"><b>Шаг&nbsp;1:</b></div></td>
+
+		<td valign="top" width="2" background="/images/bg-top02-0.gif"><img src="/images/empty.gif" width="2" height="1" border="0" alt=""></td>
+
+		<td valign="top"><div class="text3"><b>&nbsp;Данные для изменения пароля</b></div></td>
+
+	</tr>
+
+	</table>
+
+
+
+	<ul>
+
+		<li>Новый пароль:<br>
+
+		<div class="note">(не более 25 символов, разрешается использовать только символы латинского алфавита и цифры,<br>регистр букв имеет значение)</div>
+
+		<input type="password" name="newpass" class="ff" size="<?=$forms_size;?>" maxlength="25">
+
+
+
+		<li>Повторите пароль:<br>
+
+		<input type="password" name="newpass2" class="ff" size="<?=$forms_size;?>" maxlength="25">
+
+	</ul>
+
+	<br>
+
+	<input type="hidden" name="action" value="change">
+
+	<p><input type="submit" name="submit" value="Изменить пароль" class="ff">
+
+	</form>
+
+	<?
+
+}
+
+// проверяем полученные данные
+
+function check_vars($auth_vars)
+
+{
+
+	$error = '';
+
+
+
+	if($auth_vars['newpass']=='' && $auth_vars['newpass2']=='')
+
+		$error['newpass']='Вы не ввели новый пароль';
+
+	elseif($auth_vars['newpass']!=$auth_vars['newpass2'])
+
+		$error['newpass']='Введенные пароли не совпадают';
+
+	elseif(strlen($auth_vars['newpass'])>25)
+
+		$error['newpass']='Поле должно содержать на <b>'.(strlen($auth_vars['newpass'])-25).'</b> символов меньше';
+
+	elseif(!preg_match("/^[qwertyuiopasdfghjklzxcvbnm1234567890]*$/i", $auth_vars['newpass']))
+
+		$error['newpass']='Поле должно содержать только символы латинского алфавита и цифры';
+
+
+
+	return $error;
+
+}
+
+// изменяем пароль
+
+function change_pass($newpass, $login, $type)
+
+{
+
+	global $db_users_seeker, $db_users_employer;
+
+
+
+	$table = 'db_users_'.$type;
+
+
+
+	$update = mysql_query("UPDATE ".$$table." SET pass='$newpass' WHERE login='$login'");
+
+	if(!$update) return false;
+
+	else return true;
+
+}
+
+
+
+
+
+?>

@@ -1,0 +1,1902 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+ caption, tbody, tfoot, thead {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+	background: transparent;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+:focus {
+	outline: 0;
+}
+ins {
+	text-decoration: none;
+}
+del {
+	text-decoration: line-through;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+header, nav, section, article, aside, footer {
+	display: block;
+}
+body {
+	font: 13px/18px Arial, Tahoma, Verdana, sans-serif;
+    color: #505050;
+}
+a {
+	color: #0079c2;
+	outline: none;
+	text-decoration: underline;
+}
+a.date_activ
+{
+    color: #FF6600;
+    text-decoration: none;
+}
+a:hover {
+	text-decoration: none;
+}
+a.serviceLink
+{
+    text-decoration: none;
+    border-bottom: 1px dotted #0079c2;
+}
+
+p {
+	margin: 0 0 18px
+}
+img {
+	border: none;
+}
+input {
+	vertical-align: middle;
+}
+#wrapper {
+	min-width: 1040px;
+
+	margin: 0 auto;
+}
+sub{
+vertical-align: sub;
+}
+sup{
+vertical-align: super;
+}
+/* Общие стили!
+-----------------------------------------------------------------------------*/
+.aimgBlock a, .aimgBlock a img/* Внутриение элементы ссылки с картинками  <a><img></a> -  Блочные */
+{
+    display:  block;
+}
+
+.clear
+{
+    clear: both;
+}
+
+/* Модальные окна */
+.modal_bg{
+		position:absolute;
+		display:none;
+		z-index:1000;
+		left:0;
+		top:0;
+		background-color:#ffffff;
+	}
+	#enterSite{
+		position:absolute;
+		display:none;
+		right:5%;
+		z-index:1100;
+		width:260px;
+
+		height:250px;
+		background:#ffffff;
+	}
+
+    #mailUsDiv{
+		position:absolute;
+		display:none;
+        top: 50px;
+		left:25%;
+		z-index:1100;
+		width:400px;
+
+
+		background:#ffffff;
+
+
+        border: 1px solid #D4D4D4;
+        box-shadow: 0 0 10px 0 #A4A4A4;
+        padding: 20px;
+	}
+
+    #callBackDiv
+    {
+        width: 300px;
+        position:absolute;
+		display:none;
+		z-index:1100;
+        background:#ffffff;
+        border: 1px solid #D4D4D4;
+        box-shadow: 0 0 10px 0 #A4A4A4;
+        padding: 20px;
+    }
+
+    #companyContacts2{
+		position:absolute;
+		display:none;
+        top: 50px;
+		left:25%;
+		z-index:1100;
+		width:400px;
+
+
+		background:#ffffff;
+
+
+        border: 1px solid #D4D4D4;
+        box-shadow: 0 0 10px 0 #A4A4A4;
+        padding: 20px;
+	}
+
+
+    .modalClose
+    {
+        float: right;
+        text-decoration: none;
+        border-bottom: 1px dotted #0079C2;
+        display: block;
+    }
+
+    #forumHelp{
+		position:absolute;
+		display:none;
+        top: 50px;
+		left:25%;
+		z-index:1100;
+		width:500px;
+		background:#ffffff;
+        border: 1px solid #D4D4D4;
+        box-shadow: 0 0 10px 0 #A4A4A4;
+        padding: 20px;
+	}
+
+/* Оранжевая кнопка */
+.orangeButton {
+    background: transparent url('//www.ruscable.ru/rc2012/img/orange-button-bg-right.gif') no-repeat scroll top right;
+    color: #444;
+    display: block;
+
+    font: normal 12px arial, sans-serif;
+    height: 21px;
+
+    padding-right: 3px; /* sliding doors padding */
+    text-decoration: none;
+}
+
+.orangeButton span {
+    background: transparent url('//www.ruscable.ru/rc2012/img/orange-button-bg-left.gif') no-repeat;
+    display: block;
+    line-height: 18px;
+    padding: 2px 6px 1px 9px;
+    color: white;
+    font-weight: bold;
+    font-size: 11px;
+}
+.orangeButton:hover{background-position: center right;}
+.orangeButton:hover span{background-position: center left;}
+
+.orangeButton:active {
+    background-position: bottom right;
+
+    outline: none; /* hide dotted outline in Firefox */
+}
+
+.orangeButton:active span {
+    background-position: bottom left;
+    padding: 3px 6px 0px 9px; /* push text down 1px */
+}
+
+
+/* Большая Оранжевая кнопка */
+.bigOrangeButton {
+    background: transparent url('//www.ruscable.ru/rc2012/img/big-orange-bg.gif') repeat-x scroll top left;
+    color: #444;
+    display: block;
+    font-size: 13px;
+    line-height: 13px;
+    color:  white;
+    /*font-weight: bold;*/
+    height: 26px;
+    padding: 4px 10px 9px;
+    text-decoration: none;
+    border: 1px solid #cb6420;
+}
+
+
+.bigOrangeButton:hover{background-position: center left;}
+
+
+.bigOrangeButton:active {
+    background-position: bottom left;
+    padding: 5px 10px 8px;
+
+    outline: none; /* hide dotted outline in Firefox */
+}
+
+/* Большая Синяя кнопка */
+.bigBlueButton {
+    background: transparent url('/rc2012/img/big-blue-bg.gif') repeat-x scroll top left;
+    color: #444;
+    display: block;
+
+    font-size: 13px;
+    line-height: 13px;
+    color:  white;
+    /*font-weight: bold;*/
+    height: 26px;
+    padding: 4px 10px 9px;
+    text-decoration: none;
+    border: 1px solid #003e7a;
+}
+
+
+.bigBlueButton:hover{background-position: center left;}
+
+
+.bigBlueButton:active {
+    background-position: bottom left;
+    padding: 5px 10px 8px;
+
+    outline: none; /* hide dotted outline in Firefox */
+}
+/* Синяя кнопка */
+ .blueButton {
+    background: transparent url('/rc2012/img/elements_blue_3px.gif') no-repeat scroll top right;
+    color: #444;
+    display: block;
+
+    font: normal 12px arial, sans-serif;
+    height: 21px;
+
+    padding-right: 3px; /* sliding doors padding */
+    text-decoration: none;
+}
+
+ .blueButton span {
+    background: transparent url('/rc2012/img/elements_blue_300px.gif') no-repeat;
+    display: block;
+    line-height: 18px;
+    padding: 2px 6px 1px 9px;
+    color: white;
+    font-weight: bold;
+    font-size: 11px;
+}
+ .blueButton:hover{background-position: center right;}
+ .blueButton:hover span{background-position: center left;}
+
+ .blueButton:active {
+    background-position: bottom right;
+
+    outline: none; /* hide dotted outline in Firefox */
+}
+
+ .blueButton:active span {
+    background-position: bottom left;
+    padding: 3px 6px 0px 9px; /* push text down 1px */
+}
+/* Серая кнопка */
+ .grayButton {
+
+    display: block;
+    text-decoration: none;
+    height: 25px;
+    float: left;
+    margin-right: 1px;
+}
+
+ .grayButton span {
+   background: transparent url('/rc2012/img/grey-button-bg.gif') no-repeat scroll top right;
+    color: #0079c2;
+    display: block;
+
+    font: normal 12px arial, sans-serif;
+    height: 21px;
+
+    padding-right: 3px; /* sliding doors padding */
+
+
+    margin-right: 1px;
+}
+.activeGrayButton
+{
+   background: transparent url('/rc2012/img/orange-arrow.png') no-repeat scroll bottom center;
+}
+ .activeGrayButton span{
+     background: transparent url('/rc2012/img/grey-button-active-bg.gif') no-repeat scroll top right;
+ }
+.grayButton:hover span i
+{
+    color: #ff6600;
+}
+ .grayButton i {
+
+    background: transparent url('/rc2012/img/grey-button-bg.gif') no-repeat top left;
+    display: block;
+    line-height: 18px;
+    padding: 2px 4px 1px 7px;
+    color: #0079c2;
+    font-weight: bold;
+    font-size: 11px;
+    font-style: normal;
+}
+.activeGrayButton i
+{
+    background: transparent url('/rc2012/img/grey-button-active-bg.gif') no-repeat top left;
+    color: white;
+}
+
+.activeGrayButton:hover span i
+{
+    color: white;
+}
+
+ .grayButton:active {
+
+
+    outline: none; /* hide dotted outline in Firefox */
+}
+
+ .grayButton:active span i {
+
+    padding: 3px 4px 0px 7px; /* push text down 1px */
+}
+
+.cap{
+	text-transform: uppercase;
+}
+
+/* РС ПОИСК */
+
+.rcSearchInput
+{
+    display: block;
+    width: 206px;
+    height: 26px;
+    line-height: 26px;
+    background-color: #f7f7f7;
+    border-left: 1px solid #cdcdcd;
+    border-top: 1px solid #cdcdcd;
+    border-right:  none;
+    border-bottom: none;
+    font-style: italic;
+    color: #929292;
+    font-size: 13px;
+    padding:0px 0px 0px  7px;
+    float: left;
+}
+
+.rcSearchButton
+{
+    background-image: url('//www.ruscable.ru/rc2012/img/search-btn.gif');
+    background-position: top left;
+    display: block;
+    width: 27px;
+    height: 27px;
+    padding: 0px;
+    border: none;
+    margin: 0px;
+    float: left;
+}
+.rcSearchButton:hover
+{
+     background-position: center left;
+}
+
+/* Стили для разметки внтуреней части
+-----------------------------------------------------------------------------*/
+.wrapBodyStyle
+{
+    width: 90%;
+    margin: 0px auto;
+    max-width: 1600px;
+}
+
+/* Header
+-----------------------------------------------------------------------------*/
+#header {
+
+
+
+}
+
+#moreServiseDiv
+{
+    display: none;
+    position: absolute;
+    background-color: #0079C2;
+    padding-top: 8px;
+    z-index: 1000;
+}
+#moreServiseDiv p
+{
+    font-size: 12px;
+    float: none;
+    text-align: right;
+    margin-bottom: 10px;
+    line-height: 15px;
+    padding-right: 21px;
+    padding-left: 15px;
+}
+#moreServiseDiv a
+{
+    color: white;
+    text-decoration: none;
+}
+#moreServiseDiv a span
+{
+    border: none;
+}
+#moreServiseDiv a:hover span
+{
+    border-bottom: 1px solid #449DD2;
+}
+
+
+#headerTopMenu /* Верхнее меню */
+{
+    height: 42px;
+    line-height: 42px;
+    background-color: #f2f2f2;
+    background-image: url('//www.ruscable.ru/rc2012/img/top-bg-gr.jpg');
+    background-position: left;
+    background-repeat: no-repeat;
+    margin-bottom: 22px;
+}
+#topHeadSocial /*Twitter и Facebook*/
+{
+    float: left;
+    height: 32px;
+    margin-top: 5px;
+}
+#topHeadSocial a
+{
+    float: left;
+    margin-right: 5px;
+
+}
+
+#topHeadLinks /* Верхнее Меню и остальные сылки*/
+{
+    margin-left: 120px;
+    height: 42px;
+    text-align: right;
+
+}
+.topHeadLinksItem
+{
+    height: 42px;
+    line-height: 42px;
+    float: right;
+    font-size: 13px;
+}
+
+#topSendMail
+{
+
+
+    display: block;
+    float: right;
+    padding-left: 13px;
+    padding-right: 10px;
+
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+
+}
+
+#topSiteMap
+{
+
+
+    display: block;
+    float: right;
+    padding-left: 11px;
+    padding-right: 13px;
+
+
+    border-right: 1px solid white;
+    margin-right: 8%;
+}
+#topSiteMap a, #topSendMail a{height: 42px; line-height: 20px;}
+#topSiteMap img, #topSendMail img{padding-top: 15px;}
+#topMreLinks{float: right; margin-right: 11px;}
+#topMreLinks a
+{
+    font-size: 13px;
+    color: #0079c2;
+    padding: 0px 4px;
+    text-decoration: none;
+}
+#topMreLinks a span
+{
+    border-bottom: none;
+}
+
+#topMreLinks a:hover span
+{
+    border-bottom: 1px solid #88c0e3;
+}
+#topCorner
+{
+    width: 31px;
+    background-image: url('//www.ruscable.ru/rc2012/img/top-corner.gif');
+    background-repeat: no-repeat;
+}
+
+#topBlueMenu
+{
+    background-color: #0079c2;
+    color: #449dd2;
+    padding-right: 11px;
+    border-right: 1px solid white;
+}
+#topBlueMenu a
+{
+    color: white;
+    padding: 0px 7px;
+    text-decoration: none;
+
+
+}
+#topBlueMenu a.more
+{
+    background-image: url('//www.ruscable.ru/rc2012/img/white-arrow.gif');
+    background-repeat: no-repeat;
+    background-position: right center;
+    padding-right: 12px;
+}
+#topBlueMenu a span
+{
+    border-bottom: none;
+}
+#topBlueMenu a.more span
+{
+     border-bottom: none;
+}
+#topBlueMenu a:hover span
+{
+    border-bottom: 1px solid #449DD2;
+}
+#topBlueMenu a.more:hover span
+{
+    border-bottom-style: dotted;
+}
+#topOrangeMenu
+{
+
+
+    background-color: #ff6600;
+
+
+
+}
+#topOrangeMenu a
+{
+    color: white;
+    padding: 0px 20px;
+    text-decoration: none;
+}
+#topOrangeMenu a span
+{
+    border-bottom: none;
+}
+#topOrangeMenu a:hover span
+{
+    border-bottom: 1px solid #ffa366;
+}
+#topline_b
+{
+
+/*    background-color: #96c3ae; */
+	text-align: center;
+
+}
+#topline_b a, #topline_b img
+{
+    display: block;
+    text-align: center;
+    width: 760px;
+    margin: 0px auto;
+}
+
+
+#topLogoAdUser
+{
+    margin-top: 18px;
+    height: 85px;
+
+}
+
+#logo
+{
+     float: left;
+}
+#logoText1{color:#777777; font-size: 13px; margin-top: 1px;}
+#logoText2{color:#777777; font-size: 10px; line-height: 10px;}
+
+
+
+
+#topUserSearch
+{
+    float: right;
+}
+#search
+{
+
+    width: 206px;
+
+}
+
+
+#topUser
+{
+    font-size: 13px;
+    line-height: 14px;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+#topUser a
+{
+
+    color: #0079c2;
+     line-height: 11px;
+
+}
+#topUser a.loginLink
+{
+    text-decoration: none;
+    border-bottom: 1px dotted #0079c2;
+}
+#topUser a.regLink
+{
+    text-decoration: none;
+    border-bottom: 1px solid #0079c2;
+}
+#topAD
+{
+    margin-left: 282px;
+    margin-right: 250px;
+}
+#topAD .topAdInner
+{
+    width: 360px;
+    margin: 0px auto;
+    font-size: 13px;
+
+}
+#topAD img
+{
+
+    margin-top: 4px;
+    margin-right: 15px;
+}
+#topAD p{margin: 0px;}
+#topAD p.adzag
+{
+    color: #ff6600;
+    font-weight: bold;
+    margin-bottom: 3px;
+}
+
+#searchLoader {
+    background-image: url("//www.ruscable.ru/rc2012/img/ajax-loader.gif");
+    display: none;
+    height: 16px;
+    left: -20px;
+    position: absolute;
+    top: -20px;
+    width: 16px;
+    z-index: 1000;
+}
+
+#enterSite
+{
+    padding: 20px;
+    border: 1px solid #d4d4d4;
+    box-shadow:0 0 10px 0 #a4a4a4;
+}
+#enterSite .line
+{
+    height: 1px;
+    background-color: #d4d4d4;
+    margin-bottom: 13px;
+}
+#enterSite p{margin-bottom: 13px;}
+
+#enterSite .forgot
+{
+    float: right;
+    line-height: 26px;
+    display: block;
+    height: 26px;
+}
+
+#login, #pass, #nameSendUs, #emailSendUs, #textSendUs
+{
+    line-height: 26px;
+    height: 26px;
+    color: #929292;
+    display: block;
+    width: 100%;
+    background-color: #f7f7f7;
+    font-style: italic;
+    border-top: 1px solid #c7c7c7;
+    border-left: 1px solid #c7c7c7;
+    border-right: none;
+    border-bottom: none;
+}
+#textSendUs {line-height: 18px; height: auto; height: 100px;}
+#captcha{
+    line-height: 26px;
+    height: 26px;
+    color: #929292;
+    display: block;
+    width: 50%;
+    background-color: #f7f7f7;
+    font-style: italic;
+    border-top: 1px solid #c7c7c7;
+    border-left: 1px solid #c7c7c7;
+    border-right: none;
+    border-bottom: none;
+}
+/* Navigation
+-----------------------------------------------------------------------------*/
+#nav {
+	height: 40px;
+	background: #0080C0;
+    margin-bottom: 19px;
+
+}
+
+#navInner
+{
+
+}
+
+#nav .menu1Level
+{
+
+   text-align: justify !important;
+
+
+}
+#nav .menu1Level li.level1
+{
+    display: block;
+    position: relative;
+    float: left;
+    text-align: center;
+    border-bottom: 1px solid white;
+}
+
+#nav .menu1Level li.personal{width: 12%; }
+#nav .menu1Level li.searchwork{width: 12%; }
+#nav .menu1Level li.searchstaff{width: 14%;}
+
+
+#nav .menu1Level a
+{
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+	
+
+    display: block;
+    height: 40px;
+    line-height: 40px;
+
+    border-left: 1px solid #0080C0;
+    border-right: 1px solid #0080C0;
+
+
+}
+#nav .menu1Level a span{ border-bottom: none; text-transform: uppercase;}
+
+#nav .menu1Level a.active
+{
+    background-color: #ff6600;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+    background-image: url('//www.ruscable.ru/rc2012/img/top-menu-arrow.gif');
+    background-position: bottom center;
+    background-repeat: no-repeat;
+}
+#nav .menu1Level .hovered a
+{
+    border-bottom: 1px solid #ff6600;
+    background-color: #ff6600;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+    background-image: none !important;
+
+}
+#nav .menu2Level
+{
+    display: none;
+    position: absolute;
+    top: 41px;
+    left: 1px;
+    background-color: #ff6600;
+    z-index: 10;
+    padding:10px 8px;
+    /*border-top: 1px solid white;*/
+}
+
+#nav ul.visible{display: block;}
+
+#nav .menu2Level .level2 a
+{
+    display: block;
+    width: 160px;
+    height: 24px;
+    line-height: 24px;
+    padding-left: 11px;
+    border: none;
+    font-weight: normal;
+    text-align: left !important;
+
+}
+#nav .menu2Level .level2 a:hover
+{
+    background-color: #db5800;
+    text-decoration:  none
+}
+#nav .menu2Level .level2 a.active
+{
+    background-color: #db5800;
+    text-decoration:  none
+}
+/* Sidebar Right
+-----------------------------------------------------------------------------*/
+#sideRight {
+	float: left;
+	margin-right: -3px;
+	width: 260px;
+	margin-left: -262px;
+	position: relative;
+	border-left: 1px solid #D4D4D4;
+}
+
+#sideRight .rightBlock
+{
+    margin-left: 20px;
+    width: 240px;
+}
+#sideRight .bannerRight240x150, #sideRight .bannerRight240x400, #sideRight .bannerRight240x600
+{
+    margin-bottom: 20px;
+
+}
+
+#sideRight .bannerRight240x150 a, #sideRight .bannerRight240x150 a img,
+#sideRight .bannerRight240x400 a, #sideRight .bannerRight240x400 a img,
+#sideRight .bannerRight240x600 a, #sideRight .bannerRight240x600 a img
+{
+	display: block;
+}
+
+#sideRight .bannerRight240x80{margin-bottom: 20px;}
+#sideRight .bannerRight240x80 a, #sideRight .bannerRight240x80 a img {display: block;}
+
+#sideRightMenu
+{
+
+}
+#sideRightMenu h2
+{
+    height: 42px;
+    line-height: 42px;
+    font-size: 14px;
+    font-weight: bold;
+    background-color: #0079c2;
+    color: white;
+    text-transform: uppercase;
+
+    border-bottom:  1px solid #00619c;
+}
+#sideRightMenu h2 span{padding-left: 18px;}
+#sideRightMenu .line
+{
+    background-color: #0079c2;
+    height: 3px;
+    border-top: 1px solid #0089dc;
+}
+#sideRightMenu .lineB
+{
+    background-color: #0079c2;
+    height: 10px;
+    margin-bottom: 20px;
+}
+#sideRightMenu ul li.active
+{
+    background-image: url('//www.ruscable.ru/rc2012/img/rubric-active.gif');
+    background-repeat: no-repeat;
+    background-position: top left;
+}
+#sideRightMenu ul li a
+{
+    display: block;
+    margin-left: 20px;
+    height: 27px;
+    line-height: 27px;
+    color: white;
+    font-weight: bold;
+    background-color: #0079c2;
+    padding-left: 20px;
+    text-decoration: none;
+
+
+}
+#sideRightMenu ul li.active a
+{
+    background-image: url('//www.ruscable.ru/rc2012/img/rubric-active-bg.gif');
+    background-repeat: repeat-y;
+}
+#sideRightMenu ul li a span
+{
+    border-bottom: 1px solid #449dd2;
+}
+#sideRightMenu ul li.active a span{border: none;}
+#sideRightMenu ul li a:hover span{border-bottom: none;}
+
+#sideRightMenu .inner
+{
+    background-color: #0079c2;
+    margin-left: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+}
+#sideRightMenu .inner .remember
+{
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+#sideRightMenu .inner .remember a
+{
+    color: white;
+    text-decoration: none;
+
+    padding-right: 11px;
+    background-image: url('//www.ruscable.ru/rc2012/img/white-arrow.gif');
+    background-position: right center;
+    background-repeat: no-repeat;
+}
+#sideRightMenu .inner .remember a span
+{
+    border-bottom: 1px dotted white;
+}
+
+
+#sideRightCabinetMenu  .inner
+{
+    background-color: #0079c2;
+    margin-left: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+
+}
+#sideRightCabinetMenu h2
+{
+    height: 42px;
+    line-height: 42px;
+    font-size: 14px;
+    font-weight: bold;
+    background-color: #0079c2;
+    color: white;
+    text-transform: uppercase;
+
+    border-bottom:  1px solid #00619c;
+}
+#sideRightCabinetMenu h2 span{padding-left: 18px;}
+#sideRightCabinetMenu .line
+{
+    background-color: #0079c2;
+    height: 3px;
+    border-top: 1px solid #0089dc;
+}
+#sideRightCabinetMenu .lineB
+{
+    background-color: #0079c2;
+    height: 10px;
+    margin-bottom: 20px;
+}
+#sideRightCabinetMenu .miniline
+{
+    border-top: 18px solid #0079c2;
+    border-bottom: 12px solid #0079c2;
+    height: 1px;
+    background-color: #00619c;
+
+}
+#sideRightCabinetMenu ul li.active
+{
+    background-image: url('//www.ruscable.ru/rc2012/img/rubric-active.gif');
+    background-repeat: no-repeat;
+    background-position: bottom left;
+}
+#sideRightCabinetMenu ul li a
+{
+    display: block;
+    margin-left: 20px;
+    height: 20px;
+    line-height: 20px;
+    color: white;
+    font-weight: normal;
+    background-color: #0079c2;
+    padding-left: 20px;
+    text-decoration: none;
+
+
+}
+#sideRightCabinetMenu ul li.active a
+{
+    background-image: url('//www.ruscable.ru/rc2012/img/rubric-active-bg.gif');
+    background-repeat: repeat-y;
+}
+#sideRightCabinetMenu ul li a span
+{
+    border-bottom: 1px solid #449dd2;
+}
+#sideRightCabinetMenu ul li.active a span{border: none;}
+#sideRightCabinetMenu ul li a:hover span{border-bottom: none;}
+
+.blockheight8
+{
+    height: 8px;
+}
+.blockheight14
+{
+    height: 14px;
+}
+#sideRightCabinetMenu .superDiv
+{
+    background-color: #00619c;
+    padding: 10px 20px 10px 25px;
+    margin-left: 15px;
+}
+#sideRightCabinetMenu .superDiv li
+{
+    color: white;
+}
+#sideRightCabinetMenu .superDiv li a
+{
+    padding: 0;
+    margin: 0;
+    background: none;
+     display: inline;
+}
+#sideRightCabinetMenu .superDivNext{margin-left: 15px; height: 4px;}
+#sideRightCabinetMenu .superDivNext .corner
+{
+    float: left;
+    width: 5px;
+    height: 4px;
+    background-image: url('/rc2012/img/forum-super-corner.gif');
+}
+#sideRightCabinetMenu .superDivNext .line
+{
+    float: left;
+    width: 240px;
+    height: 3px;
+    background-color: #0079c2;
+    border-top: 1px solid #004b79;
+
+}
+
+
+
+
+
+
+form.blueForm label
+{
+    color: white;
+    display: block;
+    padding-top: 10px;
+}
+form.blueForm .inptxt
+{
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 4px;
+    padding: 0px 5px;
+    width: 94%;
+    background-color: #0094ee;
+    color: white;
+    font-style: italic;
+    height: 26px;
+    line-height: 26px;
+    border-left: 1px solid #003e7a;
+    border-top: 1px solid #003e7a;
+    border-bottom: none;
+    border-right: none;
+}
+
+form.blueForm .submitDiv
+{
+   margin-top: 16px;
+   margin-bottom: 4px;
+}
+/* Календарик */
+#newsCalendar{margin: 20px 0px 20px 20px;}
+#newsCalendar table, #newsCalendar table td
+{
+    border: 1px solid #d4d4d4;
+    border-collapse: collapse;
+}
+#newsCalendar table tr.days td span,#newsCalendar table tr.nums td span,#newsCalendar table tr.nums td a
+{
+    display: block;
+    width: 33px;
+    height: 33px;
+    line-height: 33px;
+    text-align: center;
+}
+#newsCalendar table tr.nums td a
+{
+    text-decoration: none;
+}
+#newsCalendar table tr.nums td.holiday span, #newsCalendar table tr.nums td.holiday a
+{
+    background-color: #ffe5d2;
+}
+#newsCalendar table tr.nums td.today span, #newsCalendar table tr.nums td.today a
+{
+    background-color: #bde6ff;
+}
+
+#newsCalendar table tr.days td span
+{
+    background-color: #ececec;
+    color: #4f4f4f;
+}
+#newsCalendar td.month span
+{
+
+    height: 33px;
+    line-height: 33px;
+    color: #4f4f4f;
+    padding-left: 12px;
+}
+#newsCalendar td.year span
+{
+
+    height: 33px;
+    line-height: 33px;
+    color: #4f4f4f;
+    padding-left: 10px;
+}
+
+
+
+/* Middle
+-----------------------------------------------------------------------------*/
+#middle {
+
+	height: 1%;
+	position: relative;
+
+}
+#middle:after {
+	content: '.';
+	display: block;
+	clear: both;
+	visibility: hidden;
+	height: 0;
+}
+#container {
+	width: 100%;
+	float: left;
+	overflow: hidden;
+}
+#content {
+
+}
+
+
+#containerInner {
+	width: 100%;
+	float: left;
+	overflow: hidden;
+}
+#contentInner {
+	padding: 0 261px 0 0;
+}
+
+
+#innerPage
+{
+    border-right: 1px solid #d4d4d4;
+    padding-right: 19px;
+}
+
+/* Новостные Баннеры */
+#newsBanners
+{
+    height: 90px;
+}
+#innerPage #newsBanners
+{
+    height: 97px;
+}
+#newsBanners .item
+{
+    float: left;
+    width: 30%;
+    margin-right: 3%;
+}
+#newsBanners .item .img
+{
+    height: 58px;
+    width: 58px;
+    border: 1px solid #d4d4d4;
+    float: left;
+    display: block;
+}
+
+#newsBanners .item .text
+{
+    display: block;
+    margin-left: 73px;
+}
+
+/* Общие стили для контента Внутренней страницы */
+#innerPage h1,
+#innerPage h2.head_gen
+{
+    padding-bottom: 23px;
+    font-size: 23px;
+    line-height: 28px;
+    font-weight: bold;
+    color: #505050;
+    border-bottom: 2px solid #7a7a7a;
+    margin-bottom: 10px;
+}
+
+#innerPage h1.ord{
+	border-bottom: 0px;
+	padding-bottom: 8px;
+}
+#innerPage h2.bigH2
+{
+    font-size: 18px;
+    font-weight: bold;
+    margin:  20px 0;
+}
+#innerPage h2.orangeH2
+{
+    font-size: 14px;
+    font-weight: bold;
+    color: #ff6600;
+}
+#innerPage .rightLink
+{
+    float: right;
+}
+#innerPage .leftLink
+{
+    float: left;
+}
+
+#innerPage h2
+{
+    font-size: 18px;
+    font-weight: bold;
+    color: #505050;
+    line-height: 23px;
+    margin-top: 10px;
+    margin-bottom: 22px;
+    text-transform: none;
+/*
+    font-size: 14px;
+    text-transform: uppercase;
+    margin-top: 25px;
+    margin-bottom: 15px;
+*/
+}
+
+#innerPage h3
+{
+    font-size: 14px;
+	font-weight: bold;
+    text-transform: none;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+
+.pageText ul, ul.simpleList
+{
+    margin: 15px 10px 25px 40px;
+	list-style-image: url(/rc2012/img/ul-dot.png);
+}
+.pageText ul ul, ul.simpleList ul
+{
+	margin: 5px 0 10px 24px;
+	list-style-image: url(/rc2012/img/ul-dash.png);
+}
+.pageText ul ul ul, ul.simpleList ul ul
+{
+	margin: 5px 0 10px 20px;
+	list-style-image: url(/rc2012/img/ul-dot.png);
+}
+
+.pageText ul li, ul.simpleList li
+{
+	margin: 10px 0;
+}
+
+
+.pageText ol, ol.simpleList
+{
+    margin: 15px 10px 25px 20px;
+    list-style-type: decimal;
+}
+.pageText ol li, ol.simpleList li
+{
+	margin: 0 0 10px 30px;
+}
+
+.infoBlock
+{
+	margin: 20px 0;
+	border-bottom: 1px solid #d4d4d4;
+}
+.infoBlock img
+{
+	float: left;
+	display: block;
+	padding-right: 30px;
+	padding-bottom: 20px;
+}
+
+.TwoColBlock
+{
+	margin: 20px 0;
+	clear: both;
+}
+.TwoColBlock img
+{
+	float: left;
+	display: block;
+	padding-right: 30px;
+	padding-bottom: 20px;
+}
+
+.pageNotice
+{
+	border-top: 2px solid #7A7A7A;
+	margin-top: 20px;
+	background-color: #EEEEEE;
+	padding: 5px 20px;
+}
+
+#innerPage img.imgDown
+{
+	margin-bottom: -3px;
+}
+
+#innerPage ul.innerMenu
+{
+    margin: 15px 10px 25px 20px;
+    list-style-type: none;
+	list-style-image: none;
+}
+#innerPage ul.innerMenu ul
+{
+	margin: 5px 0 10px 20px;
+    list-style-type: none;
+	list-style-image: none;
+}
+
+#innerPage ul.innerMenu li
+{
+	margin: 10px 0;
+}
+
+
+
+
+#innerPage .hLine
+{
+	width: 100%;
+	height: 1px;
+	margin: 30px 0 25px 0;
+	clear: all;
+	border-bottom: 1px solid #D4D4D4;
+}
+
+
+
+#innerPage .rightBlockZagSelect
+{margin-right: 22px;}
+
+
+.navLineLinks {
+    margin-bottom: 20px;
+}
+.navLineLinks a
+{
+    margin-right: 3px;
+}
+.navLineLinks ul li
+{
+    float: left;
+    margin-right: 15px;
+
+}
+.navLineLinks ul li.active a
+{
+    color:#FF6600;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+
+
+#sourceNews
+{
+    border-top: 1px solid #d4d4d4;
+    margin: 20px 0px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+#sourceNews h3{margin-bottom: 20px;}
+#newsInner .leftNewsImages td {padding-left: 20px;}
+
+
+
+/* ГЛАВНАЯ */
+
+#ajaxLoader
+{
+    position: absolute;
+    top:-20px;
+    left: -20px;
+    height: 16px;
+    width: 16px;
+    display: none;
+    background-image: url('/rc2012/img/ajax-loader.gif');
+    z-index: 1000;
+}
+
+
+#ajaxVideoLoader
+{
+    position: absolute;
+    top:-20px;
+    left: -20px;
+    height: 16px;
+    width: 16px;
+    display: none;
+    background-image: url('/rc2012/img/ajax-video-loader.gif');
+    z-index: 1000;
+}
+#content h2
+{
+    color: #505050;
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: bold;
+    height: 39px;
+    line-height: 39px;
+}
+/* Разметка Большого Блока на ГЛАВНОЙ
+Left */
+.mainBigBlock {
+	width: 100%;
+	height: 1%;
+	position: relative;
+}
+.mainBigBlock:after {
+	content: '.';
+	display: block;
+	clear: both;
+	visibility: hidden;
+	height: 0;
+}
+.mainBigBlock .leftInBigBlock {
+	width: 100%;
+	float: left;
+	overflow: hidden;
+}
+.mainBigBlock .leftInBigBlock .innerBlock {
+	padding: 0 261px 0 0;
+
+}
+
+.mainBigBlock .leftInBigBlock .innerBlock .innerBlockBord
+{
+    border-right:1px solid #d4d4d4;
+   padding-right: 20px;
+}
+/*Right*/
+.mainBigBlock .rightInBigBlock{
+	float: left;
+	width: 260px;
+	margin-left: -262px;
+	position: relative;
+	border-left:1px solid #d4d4d4;
+}
+.mainBigBlock .rightInBigBlock .inner
+{
+    margin-left: 20px;
+}
+
+
+
+
+
+.bigBord
+{
+     border-top: 2px solid #7a7a7a;
+}
+
+
+
+/* Facebook */
+
+#facebookGroup
+{
+
+}
+#facebookGroup h2
+{
+
+    background-image: url("/rc2012/img/litle-h2-bg.gif");
+    background-position: right center;
+    background-repeat: no-repeat;
+    margin-bottom: 20px;
+}
+
+
+
+.mainLongBanner
+{
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.jButton{
+    float: right;
+    margin-right: 8px;
+    margin-top: 9px;
+}
+.jButton a.orangeButton
+{
+    margin-right: 2px;
+    float: left;
+}
+
+.jButton a.blueButton
+{
+    margin-right: 2px;
+    float: left;
+}
+
+
+.divForm
+{
+	margin: 10px 0 20px 0;
+	padding: 5px 10px 20px 10px;
+	background-color: rgb(230,230,230);
+}
+
+.tform{
+	font-size:13px !important;
+}
+
+.tform input[type="text"]{
+	height: 18px;
+	margin: 4px 4px 4px 0px;
+	width:450px;
+	background-color: rgb(247,247,247);
+	border-top: 1px solid rgb(205,205,205);
+	border-left: 1px solid rgb(205,205,205);
+	border-right: 1px solid rgb(247,247,247);
+	border-bottom: 1px solid rgb(247,247,247);
+	font-size:13px !important;
+}
+.tform input[type="password"]{
+	height: 18px;
+	margin: 4px 4px 4px 0px;
+	width:450px;
+	background-color: rgb(247,247,247);
+	border-top: 1px solid rgb(205,205,205);
+	border-left: 1px solid rgb(205,205,205);
+	border-right: 1px solid rgb(247,247,247);
+	border-bottom: 1px solid rgb(247,247,247);
+	font-size:13px !important;
+}
+.tform select {
+	height: 18px;
+	margin: 4px 4px 4px 0px;
+	width:450px;
+}
+.tform textarea{
+	margin: 4px 4px 4px 0px;
+	width:450px;
+	background-color: rgb(247,247,247);
+	border-top: 1px solid rgb(205,205,205);
+	border-left: 1px solid rgb(205,205,205);
+	border-right: 1px solid rgb(247,247,247);
+	border-bottom: 1px solid rgb(247,247,247);
+}
+.tform input[type="submit"]{ border: 1px solid rgb(220,80,0); height: 25px; font-size: 110%;  font-family: Tahoma; line-height: 120%;  padding-left: 4px; background-color: rgb(253,108,10); color:white;}
+.tform input[type="reset"]{ border: 1px solid rgb(220,80,0); height: 25px; font-size: 110%;  font-family: Tahoma; line-height: 120%;  padding-left: 4px; background-color: rgb(253,108,10); color:white;}
+.tform input[type="button"]{ border: 1px solid #45afe5; height: 25px; font-size: 100%;  font-family: Tahoma; line-height: 120%;  padding-left: 4px; background-color: #057fc5; color:white;}
+.tform input[type="button"]:hover{ color: #dddddd;}
+/* Сюжеты */
+.storiesDiv h2
+{
+    margin-bottom: 8px;
+}
+/* Footer
+-----------------------------------------------------------------------------*/
+#footer {
+    margin-top: 25px;
+	border-top: 1px solid #d4d4d4;
+	background: #f2f2f2;
+}
+
+#footer .leftFotter
+{
+    width: 60%;
+    float: left;
+}
+#footer .leftFotter .inner
+{
+    margin-right: 60px;
+    margin-top: 33px;
+}
+#footer .rightFooter
+{
+    width: 40%;
+    float: left;
+}
+#footer .rightFooter .inner
+{
+    margin-left: 20px;
+    margin-top: 33px;
+}
+#footer .footerZag
+{
+    height: 20px;
+    color: #4f4f4f;
+    font-weight: bold;
+    padding-bottom: 9px;
+    margin-bottom: 19px;
+    border-bottom: 1px solid #d4d4d4;
+}
+#footer ul{line-height: 23px; margin-bottom: 32px;}
+#footer ul li.spaceAfter{margin-bottom: 23px;}
+#footer .leftFotter ul.column_1
+{
+    width: 30%;
+    float: left;
+}
+#footer .leftFotter ul.column_2
+{
+    width: 40%;
+    float: left;
+}
+#footer .leftFotter ul.column_3
+{
+    width: 30%;
+    float: left;
+}
+
+#footer .leftFotter div.column_1
+{
+    width: 30%;
+    float: left;
+}
+#footer .leftFotter div.column_2
+{
+    width: 40%;
+    float: left;
+}
+#footer .leftFotter div.column_3
+{
+    width: 30%;
+    float: left;
+}
+#footer .middleFooter
+{
+    clear: both;
+    color: #4f4f4f;
+    font-weight: normal;
+    padding: 11px 0 5px 0;
+    margin: 0 0 10px 0;
+    border-top: 1px solid #d4d4d4;
+}
+
+#footerLine
+{
+    clear: both;
+    height: 2px;
+    /* background-color: #7a7a7a; */
+    background-color: #777777;
+    margin-bottom: 32px;
+}
+#footerBottomText
+{
+    padding-right: 15px;
+    /* color: #4f4f4f; */
+    color: #777777;
+    line-height: 18px;
+}
+#footerBottomText p
+{
+    margin-bottom: 6px;
+}
+
+#footerRcLogo{float: left; padding-top: 5px;}
+#footerAdress
+{
+    margin-left: 115px;
+    /* color: #4f4f4f; */
+    color: #777777;
+    line-height: 18px;
+}
+#footerAdress p{margin-bottom: 6px;}
+
+.tblbord{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	border-bottom: solid 1px  rgb(212,212,212);
+	border-right: solid 1px  rgb(212,212,212);
+	border-top: solid 2px rgb(212,212,212);
+	border-left: solid 1px  rgb(212,212,212);
+}
+.tblbord th {
+	border: solid 1px  rgb(212,212,212);
+	background-color: #f2f2f2;
+	padding: 3px;
+	line-height:1.3;
+	border-bottom: 0px;
+	border-right: 0px;
+	text-align: left;
+	vertical-align: top;
+}
+.tblbord td {
+	border: solid 1px  rgb(212,212,212);
+	padding: 3px;
+	line-height:1.3;
+	border-bottom: 0px;
+	border-right: 0px;
+}
+/*.tblbord td {padding: 3px;}*/
+.tblth {background-color: rgb(230,230,230);}
+
+span.tbl-plus {
+	color: #fe6a39;
+	font-weight: bold;
+}
+span.tbl-minus {
+	color: #000000;
+	font-weight: bold;
+}
+
+.tbllight{
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.tbllight li{
+	padding: 10px 0px 20px 0px; border-bottom: solid 1px  rgb(212,212,212);
+}
+.tbllight li:last-child
+{
+     border-bottom: none;
+}
+
+.tbllight td { padding: 3px; line-height:1.3;border-bottom: 0px;border-right: 0px;}
+
+
+
+
+.fgrayButton {
+    display: block;
+    text-decoration: none;
+    height: 25px;
+    float: left;
+    margin-right: 1px;
+}
+
+.fgrayButton span {
+   background: transparent url('/rc2012/img/grey-button-bg.gif') no-repeat scroll top right;
+    display: block;
+    font: normal 12px arial, sans-serif;
+    height: 21px;
+    padding-right: 3px; /* sliding doors padding */
+    margin-right: 1px;
+    color: rgb(80,80,80);
+}
+.fgrayButton:hover span i
+{
+    color: #ff6600;
+}
+.fgrayButton i {
+    background: transparent url('/rc2012/img/grey-button-bg.gif') no-repeat top left;
+    display: block;
+    line-height: 18px;
+    padding: 2px 4px 1px 7px;
+    font-weight: normal;
+    font-size: 11px;
+    font-style: normal;
+}
+ .fgrayButton:active span i {
+
+    padding: 3px 4px 0px 7px; /* push text down 1px */
+}
+
+
+#schrtchiki
+{
+    padding: 10px 0px;
+
+}#schrtchiki li
+{
+    display: block;
+    float: left;
+    width: 90px;
+    height: 35px;
+    margin-right: 5px;
+}
+#links
+{
+    color: #777777;
+    font-size: 11px;
+}
+#links  a
+{
+    color: #777777;
+
+}
+.leftside_tab {position: fixed !important; position: absolute; top: 300px; left: 0px;}
+
+.note {color: a3a3a3; font-family: Arial,sans-serif; font-size: 11px;}
+
+#ruscableNews
+{
+
+}
+#ruscableNews h2
+{
+    background-image: url('//www.ruscable.ru/rc2012/img/litle-h2-bg.gif');
+    background-position: right;
+    background-repeat: no-repeat;
+    margin-bottom: 18px;
+}

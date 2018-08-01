@@ -1,0 +1,128 @@
+<?
+include_once('0-includes.inc');
+
+$title='Восстановление пароля';
+$pagename='forget';
+
+//====================================================
+// если действие не определено, то нет действия
+if(!isset($action)) $action='';
+// пока никаких отчетов о действиях не было
+$action_inform='';
+//====================================================
+db_connect();
+
+// действия
+include('0-header.inc');
+echo '<h1>ВОССТАНОВЛЕНИЕ ПАРОЛЯ</h1>';
+switch($action)
+{
+	// выводим форму
+	case 'show_form':
+		show_form();
+	break;
+
+	// восстанавливаем
+	case 'recovery':
+		// принимаем данные
+		if(!isset($HTTP_POST_VARS['type'])) $HTTP_POST_VARS['type'] = '';
+		$form_vars['login'] = trim(strip_tags($HTTP_POST_VARS['login']));
+		$form_vars['type']  = trim(strip_tags($HTTP_POST_VARS['type']));
+		// проверяем данные
+		$check_form = check_vars($form_vars);
+		// есть такая маза
+		if($check_form == '')
+		{
+			$data = get_data($form_vars);
+			if($data['email']!='')
+			{
+				$msg  = "Кто-то, возможно Вы, запросил восстановление пароля\n";
+				$msg .= "от аккаунта на сайте $cfg_site_name\n\n";
+				$msg .= "Ваш пароль: ".$data['pass']."\n\n";
+				$msg .= "------------------------------\n";
+				$msg .= "Администрация $cfg_site_name\n";
+				$msg .= "mailto:$cfg_from_email\n";
+				letter_2_user($data['email'], $msg, 'Восстановление пароля');
+				echo '<p><font color="#ff0000"><b>Результат:</b> Забытый пароль выслан на Ваш электронный адрес</font>';
+			}
+			else
+			{
+				echo '<p><font color="#ff0000"><b>Ошибка:</b> при регистрации не был указан e-mail, для восстановления пароля отправьте письмо администрации сайта на электронный адрес <a href="mailto:job@ruscable.ru">job@ruscable.ru</a>.</font>';
+			}
+		}
+		// не прокатило
+		else
+		{
+			echo '<p><font color="#ff0000"><b>Ошибка:</b> '.$check_form.'</font>';
+			show_form();
+		}
+
+	break;
+
+	// выводим форму с данными
+	default:
+		show_form();
+	break;
+}
+include('0-footer.inc');
+
+//====================================================
+// ФУНКЦИИ
+//====================================================
+// выводим форму
+function show_form()
+{
+	?>
+	<form name="form" method="post" enctype="multipart/form-data" action="<?=$GLOBALS['SCRIPT_NAME'];?>" class=tform>
+
+	<p>Для восстановления пароля введите, пожалуйста, необходимые данные и пароль будет отправлен на электронный адрес, который Вы указали при регистрации:
+	<p>Логин: <input type="text" name="login" class="ff"><br>
+	<input type="radio" name="type" value="seeker" id="el_11"><label for="el_11"> Вы соискатель</label><br>
+	<input type="radio" name="type" value="employer" id="el_22"><label for="el_22"> Вы работодатель</label><br><br>
+	<input type="hidden" name="action" value="recovery">
+	<input type="submit" name="submit" value="Отправить" class="ff">
+	</form>
+	<?
+}
+// проверяем полученные данные
+function check_vars($form_vars)
+{
+	$error = '';
+
+	if($form_vars['login']=='')
+		$error = 'Все поля обязательны для заполнения';
+	elseif(strlen($form_vars['login'])>25)
+		$error = 'Логин должен содержать на <b>'.(strlen($form_vars['login'])-25).'</b> символов меньше';
+	elseif(!preg_match("/^[qwertyuiopasdfghjklzxcvbnm1234567890]*$/i", $form_vars['login']))
+		$error = 'Логин должен содержать только символы латинского алфавита и цифры';
+
+	if($form_vars['type']!='seeker' && $form_vars['type']!='employer')
+		$error = 'Все поля обязательны для заполнения';
+
+	if($error == '')
+	{
+		$isuser = check_tblrow($GLOBALS['db_users_'.$form_vars['type']], 'login', $form_vars['login']);
+		if(!$isuser)
+		{
+			if($form_vars['type'] == 'seeker') $user_type = 'Соискатель';
+			else $user_type = 'Работодатель';
+			$error = $user_type.' <b>'.$form_vars['login'].'</b> в системе не зарегистрирован';
+		}
+	}
+
+	return $error;
+}
+// вытаскиваем пароль
+function get_data($form_vars)
+{
+	global $db_users_seeker, $db_users_employer;
+
+	$table = 'db_users_'.$form_vars['type'];
+	$data = get_tblrow($$table, '*', 'login', $form_vars['login']);
+
+	$res['pass']  = $data['pass'];
+	$res['email'] = $data['email'];
+
+	return $res;
+}
+?>
