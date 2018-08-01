@@ -34,3 +34,4 @@ RewriteRule data-vacancie-([^\.]+)\.html data-vacancie.html?id=$1&%{QUERY_STRING
 
 php_value auto_prepend_file /home/ruscableru/ruscableru/job/prepend.php
 php_value session.cookie_domain ".ruscable.ru"
+#php_value session.cookie_domain ".ruscable.ru"
