@@ -10,6 +10,8 @@
 
 // Название сайта
 #$cfg_site_name       = 'Job.RusCable.Ru';
+#$cfg_site_name       = 'Job.RusCable.Ru';
+#$cfg_site_name       = 'Job.RusCable.Ru';
 $cfg_site_name       = 'Job.RusCable.Ru';
 
 // мыло заголовка 'From:' для отправляемых скриптами писем
