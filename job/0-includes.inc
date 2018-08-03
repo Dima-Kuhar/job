@@ -4,4 +4,5 @@ include_once('0-config.inc');     // конфигурационный файл
 include_once('db_connect.php');   // функции работы с базой данных и реквизитами подключения к ней
 include_once('0-functions.inc');  // общие функции
 #include_once('0-functions.inc');  // общие функции
+## this is branch master!
 ?>
